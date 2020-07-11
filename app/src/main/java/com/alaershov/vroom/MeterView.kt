@@ -45,6 +45,8 @@ constructor(
     private val angleRange: Float
         get() = maxAngle - minAngle
 
+    private var circlePadding = dpToPxFloat(6)
+
     init {
         context.theme.obtainStyledAttributes(
             attrs,
@@ -61,7 +63,8 @@ constructor(
         }
 
         dial = Dial(
-            strokeWidth = dpToPxFloat(2),
+            circleStrokeWidth = dpToPxFloat(2),
+            circlePadding = circlePadding,
             color = dialColor,
             minorTickConfig = TickConfig(
                 length = dpToPxFloat(15),
@@ -77,7 +80,7 @@ constructor(
 
         hand = Hand(
             startWidth = dpToPxFloat(6),
-            endWidth = dpToPxFloat(2),
+            endWidth = dpToPxFloat(3),
             color = handColor
         )
     }
@@ -132,7 +135,7 @@ constructor(
         center: PointF,
         size: Int
     ) {
-        val length = (size / 2).toFloat()
+        val length = (size / 2).toFloat() - circlePadding
 
         val valuePercent = (value / abs(valueMax - valueMin)).coerceIn(0.0, 1.0)
         val angle = (minAngle + (angleRange * valuePercent)).toFloat()

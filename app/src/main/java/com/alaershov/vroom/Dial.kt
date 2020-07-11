@@ -4,7 +4,8 @@ import android.graphics.*
 import android.util.Log
 
 class Dial(
-    val strokeWidth: Float,
+    val circleStrokeWidth: Float,
+    val circlePadding: Float,
     val minorTickConfig: TickConfig,
     val majorTickConfig: TickConfig,
     val color: Int
@@ -21,7 +22,7 @@ class Dial(
     private val center: PointF = PointF()
     private var size: Float = 0f
     private val radius: Float
-        get() = (size - strokeWidth) / 2
+        get() = (size - circleStrokeWidth) / 2
 
     private val path: Path = Path()
     private val matrix: Matrix = Matrix()
@@ -32,21 +33,21 @@ class Dial(
     init {
         circlePaint.apply {
             style = Paint.Style.STROKE
-            strokeWidth = this@Dial.strokeWidth
+            strokeWidth = this@Dial.circleStrokeWidth
             isAntiAlias = true
             color = this@Dial.color
         }
 
         minorTickPaint.apply {
             style = Paint.Style.STROKE
-            strokeWidth = this@Dial.strokeWidth
+            strokeWidth = this@Dial.circleStrokeWidth
             isAntiAlias = true
             color = this@Dial.color
         }
 
         majorTickPaint.apply {
             style = Paint.Style.STROKE
-            strokeWidth = this@Dial.strokeWidth * 2
+            strokeWidth = this@Dial.circleStrokeWidth * 2
             isAntiAlias = true
             color = this@Dial.color
         }
@@ -71,6 +72,11 @@ class Dial(
     fun draw(canvas: Canvas) {
         drawCircle(canvas)
         drawTicks(canvas)
+        drawTickValues(canvas)
+    }
+
+    private fun drawCircle(canvas: Canvas) {
+        canvas.drawCircle(center.x, center.y, radius, circlePaint)
     }
 
     private fun drawTicks(canvas: Canvas) {
@@ -107,15 +113,16 @@ class Dial(
 
         path.apply {
             reset()
-            moveTo(radius - tickConfig.length, 0f)
-            lineTo(radius, 0f)
+            val outerRadius = radius - circlePadding
+            moveTo(outerRadius - tickConfig.length, 0f)
+            lineTo(outerRadius, 0f)
             transform(matrix)
         }
 
         canvas.drawPath(path, tickConfig.paint)
     }
 
-    private fun drawCircle(canvas: Canvas) {
-        canvas.drawCircle(center.x, center.y, radius, circlePaint)
+    private fun drawTickValues(canvas: Canvas) {
+
     }
 }
