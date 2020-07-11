@@ -1,8 +1,10 @@
 package com.alaershov.vroom
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
 
@@ -12,6 +14,8 @@ class MainActivity : AppCompatActivity() {
 
     private val valueMin = 0.0
     private val valueMax = 220.0
+
+    private var valueAnimator: ValueAnimator? = null
 
     private lateinit var speedometerView: MeterView
 
@@ -31,7 +35,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun postValue() {
         handler.postDelayed({
-            speedometerView.value = Random.Default.nextDouble(valueMin, valueMax)
+            val previousValue = speedometerView.value
+            val newValue = Random.Default.nextDouble(valueMin, valueMax)
+            val valueDifference: Double = newValue - previousValue
+            valueAnimator?.cancel()
+            valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                duration = 300
+                interpolator = LinearInterpolator()
+                addUpdateListener { valueAnimator ->
+                    val animatedFloat = valueAnimator.animatedValue as Float
+                    speedometerView.value = previousValue + (animatedFloat * valueDifference)
+                }
+                start()
+            }
+
             postValue()
         }, 500)
     }

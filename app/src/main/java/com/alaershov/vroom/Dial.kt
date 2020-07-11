@@ -1,7 +1,6 @@
 package com.alaershov.vroom
 
 import android.graphics.*
-import android.util.Log
 
 class Dial(
     val circleStrokeWidth: Float,
@@ -85,7 +84,6 @@ class Dial(
     }
 
     private fun drawMinorTicks(canvas: Canvas) {
-        Log.d("HandView", "minorTickAmount=$minorTickAmount")
         val tickAngleValue = angleRange / minorTickAmount
         for (i in 0..minorTickAmount) {
             drawTick(canvas, minAngle + tickAngleValue * i, minorTickConfig)
@@ -93,7 +91,6 @@ class Dial(
     }
 
     private fun drawMajorTicks(canvas: Canvas) {
-        Log.d("HandView", "majorTickAmount=$majorTickAmount")
         val tickAngleValue = angleRange / majorTickAmount
         for (i in 0..majorTickAmount) {
             drawTick(canvas, minAngle + tickAngleValue * i, majorTickConfig)
