@@ -31,6 +31,22 @@ class Dial(
     }
 
     fun draw(canvas: Canvas) {
+        drawCircle(canvas)
+        drawTicks(canvas)
+    }
+
+    private fun drawTicks(canvas: Canvas) {
+        drawMinorTicks(canvas)
+        drawMajorTicks(canvas)
+    }
+
+    private fun drawMinorTicks(canvas: Canvas) {
+    }
+
+    private fun drawMajorTicks(canvas: Canvas) {
+    }
+
+    private fun drawCircle(canvas: Canvas) {
         canvas.drawCircle(center.x, center.y, radius, circlePaint)
     }
 }
