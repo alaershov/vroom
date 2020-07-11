@@ -2,7 +2,7 @@ package com.alaershov.vroom
 
 import android.graphics.*
 
-class Arrow(
+class Hand(
     val startWidth: Float,
     val endWidth: Float,
     val color: Int
@@ -19,7 +19,7 @@ class Arrow(
         paint.apply {
             style = Paint.Style.FILL_AND_STROKE
             isAntiAlias = true
-            color = this@Arrow.color
+            color = this@Hand.color
         }
     }
 

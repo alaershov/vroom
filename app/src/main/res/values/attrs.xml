@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MeterView">
-        <attr name="meter_circleColor" format="color" />
-        <attr name="meter_arrowColor" format="color" />
+        <attr name="meter_dialColor" format="color" />
+        <attr name="meter_handColor" format="color" />
     </declare-styleable>
 </resources>
