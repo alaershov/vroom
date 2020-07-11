@@ -10,9 +10,9 @@ class Hand(
     private var length: Float = 0f
     private var angle: Float = 0f
 
-    val pivot: PointF = PointF()
-    val path: Path = Path()
-    val matrix: Matrix = Matrix()
+    private val pivot: PointF = PointF()
+    private val path: Path = Path()
+    private val matrix: Matrix = Matrix()
     private val paint: Paint = Paint()
 
     init {
@@ -34,9 +34,9 @@ class Hand(
             reset()
             val startWidthShift = startWidth / 2
             val endWidthShift = endWidth / 2
-            val startX = pivot.x
-            val y = pivot.y
-            val endX = pivot.x + length
+            val startX = 0f
+            val y = 0f
+            val endX = startX + length
             moveTo(startX, y + startWidthShift)
             lineTo(endX, y + endWidthShift)
             lineTo(endX, y - endWidthShift)
@@ -46,7 +46,8 @@ class Hand(
         }
         matrix.apply {
             reset()
-            setRotate(angle, pivot.x, pivot.y)
+            setRotate(angle)
+            postTranslate(pivot.x, pivot.y)
         }
         path.transform(matrix)
         canvas.drawPath(path, paint)

@@ -26,6 +26,9 @@ constructor(
 
     private var valueMin: Double = 0.0
     private var valueMax: Double = 0.0
+    private val valueRange: Double
+        get() = abs(valueMax - valueMin)
+
     private var minorTickValue: Double = 0.0
     private var majorTickValue: Double = 0.0
 
@@ -59,7 +62,17 @@ constructor(
 
         dial = Dial(
             strokeWidth = dpToPxFloat(2),
-            color = dialColor
+            color = dialColor,
+            minorTickConfig = TickConfig(
+                length = dpToPxFloat(15),
+                strokeWidth = dpToPxFloat(3),
+                color = dialColor
+            ),
+            majorTickConfig = TickConfig(
+                length = dpToPxFloat(30),
+                strokeWidth = dpToPxFloat(6),
+                color = dialColor
+            )
         )
 
         hand = Hand(
@@ -94,16 +107,30 @@ constructor(
     }
 
     private fun drawSpeedometer(canvas: Canvas, center: PointF, size: Int) {
-        dial.update(center, size.toFloat())
-        dial.draw(canvas)
+        drawDial(canvas, center, size)
+        drawHand(canvas, center, size)
+    }
 
-        drawHand(center, size, canvas)
+    private fun drawDial(
+        canvas: Canvas,
+        center: PointF,
+        size: Int
+    ) {
+        dial.update(
+            center = center,
+            size = size.toFloat(),
+            minorTickAmount = (valueRange / minorTickValue).toInt(),
+            majorTickAmount = (valueRange / majorTickValue).toInt(),
+            minAngle = minAngle,
+            maxAngle = maxAngle
+        )
+        dial.draw(canvas)
     }
 
     private fun drawHand(
+        canvas: Canvas,
         center: PointF,
-        size: Int,
-        canvas: Canvas
+        size: Int
     ) {
         val length = (size / 2).toFloat()
 
