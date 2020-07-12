@@ -1,14 +1,11 @@
 package com.alaershov.vroom
 
-import android.animation.ValueAnimator
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
-import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
-import com.alaershov.vroom.datasource.SpeedDataSource
 import com.alaershov.vroom.datasource.VehicleDataCallback
 import com.alaershov.vroom.datasource.VehicleDataSourceService
 import com.alaershov.vroom.datasource.VehicleDataSourceServiceInterface
@@ -19,17 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private val handler: Handler = Handler(Looper.getMainLooper())
 
-    private val valueMin = 0.0
-    private val valueMax = 220.0
-
-    private val speedDataSource = SpeedDataSource(
-        valueMin,
-        valueMax
-    )
-
-    private var valueAnimator: ValueAnimator? = null
-
     private lateinit var speedometerView: MeterView
+    private lateinit var speedometerValueAnimator: MeterValueAnimator
 
     private var vehicleService: VehicleDataSourceServiceInterface? = null
 
@@ -68,11 +56,13 @@ class MainActivity : AppCompatActivity() {
 
         speedometerView = findViewById(R.id.view_speedometer)
         speedometerView.setup(
-            valueMin = valueMin,
-            valueMax = valueMax,
+            valueMin = 0.0,
+            valueMax = 220.0,
             minorTickValue = 10.0,
             majorTickValue = 20.0
         )
+
+        speedometerValueAnimator = MeterValueAnimator(speedometerView)
     }
 
     override fun onStart() {
@@ -94,23 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showVehicleData(speed: Float, rpm: Float) {
-        val previousValue = speedometerView.value
-
-        animateSpeed(previousValue, speed.toDouble())
-    }
-
-    private fun animateSpeed(previousValue: Double, newValue: Double) {
-        val valueDifference: Double = newValue - previousValue
-
-        valueAnimator?.cancel()
-        valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = 100
-            interpolator = LinearInterpolator()
-            addUpdateListener { valueAnimator ->
-                val animatedFloat = valueAnimator.animatedValue as Float
-                speedometerView.value = previousValue + (animatedFloat * valueDifference)
-            }
-            start()
-        }
+        speedometerValueAnimator.animateValue(speed.toDouble())
     }
 }
