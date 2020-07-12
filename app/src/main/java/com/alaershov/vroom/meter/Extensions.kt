@@ -1,4 +1,4 @@
-package com.alaershov.vroom
+package com.alaershov.vroom.meter
 
 import android.view.View
 import kotlin.math.roundToInt

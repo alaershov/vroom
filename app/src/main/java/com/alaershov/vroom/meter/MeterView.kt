@@ -1,12 +1,12 @@
-package com.alaershov.vroom
+package com.alaershov.vroom.meter
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PointF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import com.alaershov.vroom.*
 import kotlin.math.abs
 
 class MeterView
@@ -139,7 +139,6 @@ constructor(
 
         val valuePercent = (value / abs(valueMax - valueMin)).coerceIn(0.0, 1.0)
         val angle = (minAngle + (angleRange * valuePercent)).toFloat()
-        Log.d("MeterView", "value=$value valuePercent=$valuePercent angle=$angle")
 
         hand.update(center, length, angle)
         hand.draw(canvas)

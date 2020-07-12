@@ -12,6 +12,7 @@ import com.alaershov.vroom.datasource.SpeedDataSource
 import com.alaershov.vroom.datasource.VehicleDataCallback
 import com.alaershov.vroom.datasource.VehicleDataSourceService
 import com.alaershov.vroom.datasource.VehicleDataSourceServiceInterface
+import com.alaershov.vroom.meter.MeterView
 
 
 class MainActivity : AppCompatActivity() {

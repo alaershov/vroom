@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.alaershov.vroom.MeterView
+    <com.alaershov.vroom.meter.MeterView
         android:id="@+id/view_speedometer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
