@@ -10,10 +10,10 @@ class SpeedDataSource(
 
     fun getSpeed(time: Long): Double {
         val bigPeriod: Double = 10.0 * 1000
-        val smallPeriod: Double = bigPeriod / 30
+        val smallPeriod: Double = bigPeriod / 20
 
-        val big = speedPart(time, bigPeriod) * 0.8
-        val small = speedPart(time, smallPeriod) * 0.2
+        val big = speedPart(time, bigPeriod) * 0.95
+        val small = speedPart(time, smallPeriod) * 0.05
 
         val range = abs(valueMax - valueMin)
         return valueMin + range * (big + small)

@@ -46,7 +46,7 @@ class VehicleDataSourceService : Service() {
             }
             callbackList.finishBroadcast()
 
-            handler.postDelayed(this, 50)
+            handler.postDelayed(this, 100)
         }
     }
 
