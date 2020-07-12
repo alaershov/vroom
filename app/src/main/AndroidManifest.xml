@@ -18,6 +18,9 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".datasource.VehicleDataSourceService"
+            android:process=":vehicle_data_source" />
     </application>
 
 </manifest>
