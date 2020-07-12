@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
-import com.alaershov.vroom.*
+import com.alaershov.vroom.R
 import kotlin.math.abs
 
 class MeterView
@@ -24,13 +24,7 @@ constructor(
             invalidate()
         }
 
-    private var valueMin: Double = 0.0
-    private var valueMax: Double = 0.0
-    private val valueRange: Double
-        get() = abs(valueMax - valueMin)
-
-    private var minorTickValue: Double = 0.0
-    private var majorTickValue: Double = 0.0
+    private var config: Config = Config()
 
     private var handColor: Int = Color.WHITE
     private var dialColor: Int = Color.WHITE
@@ -85,16 +79,8 @@ constructor(
         )
     }
 
-    fun setup(
-        valueMin: Double,
-        valueMax: Double,
-        minorTickValue: Double,
-        majorTickValue: Double
-    ) {
-        this.valueMin = valueMin
-        this.valueMax = valueMax
-        this.minorTickValue = minorTickValue
-        this.majorTickValue = majorTickValue
+    fun configure(config: Config) {
+        this.config = config
         invalidate()
     }
 
@@ -122,8 +108,8 @@ constructor(
         dial.update(
             center = center,
             size = size.toFloat(),
-            minorTickAmount = (valueRange / minorTickValue).toInt(),
-            majorTickAmount = (valueRange / majorTickValue).toInt(),
+            minorTickAmount = (config.valueRange / config.minorTickValue).toInt(),
+            majorTickAmount = (config.valueRange / config.majorTickValue).toInt(),
             minAngle = minAngle,
             maxAngle = maxAngle
         )
@@ -137,10 +123,21 @@ constructor(
     ) {
         val length = (size / 2).toFloat() - circlePadding
 
-        val valuePercent = (value / abs(valueMax - valueMin)).coerceIn(0.0, 1.0)
+        val valuePercent = (value / abs(config.valueRange)).coerceIn(0.0, 1.0)
         val angle = (minAngle + (angleRange * valuePercent)).toFloat()
 
         hand.update(center, length, angle)
         hand.draw(canvas)
+    }
+
+    class Config(
+        val valueMin: Double = 0.0,
+        val valueMax: Double = 0.0,
+        val minorTickValue: Double = 0.0,
+        val majorTickValue: Double = 0.0
+    ) {
+
+        val valueRange: Double
+            get() = abs(valueMax - valueMin)
     }
 }

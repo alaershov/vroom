@@ -56,15 +56,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         speedometerView = findViewById(R.id.view_speedometer)
-        speedometerView.setup(
-            valueMin = 0.0,
-            valueMax = 220.0,
-            minorTickValue = 10.0,
-            majorTickValue = 20.0
+        speedometerView.configure(
+            MeterView.Config(
+                valueMin = 0.0,
+                valueMax = 220.0,
+                minorTickValue = 10.0,
+                majorTickValue = 20.0
+            )
         )
-
-        speedometerValueAnimator =
-            MeterValueAnimator(speedometerView)
+        speedometerValueAnimator = MeterValueAnimator(speedometerView)
     }
 
     override fun onStart() {
