@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alaershov.vroom.datasource.VehicleDataCallback
 import com.alaershov.vroom.datasource.VehicleDataSourceService
 import com.alaershov.vroom.datasource.VehicleDataSourceServiceInterface
+import com.alaershov.vroom.meter.MeterValueAnimator
 import com.alaershov.vroom.meter.MeterView
 
 
@@ -62,7 +63,8 @@ class MainActivity : AppCompatActivity() {
             majorTickValue = 20.0
         )
 
-        speedometerValueAnimator = MeterValueAnimator(speedometerView)
+        speedometerValueAnimator =
+            MeterValueAnimator(speedometerView)
     }
 
     override fun onStart() {
