@@ -6,7 +6,7 @@ import android.view.animation.LinearInterpolator
 
 class MeterValueAnimator(
     private val meterView: MeterView,
-    private val duration: Long = 100,
+    private val duration: Long = 150,
     private val interpolator: TimeInterpolator = LinearInterpolator()
 ) {
 

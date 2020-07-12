@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.RemoteCallbackList
 import android.os.RemoteException
+import kotlin.random.Random
 
 class VehicleDataSourceService : Service() {
 
@@ -46,7 +47,8 @@ class VehicleDataSourceService : Service() {
             }
             callbackList.finishBroadcast()
 
-            handler.postDelayed(this, 100)
+            // random interval between new data for more realistic simulation
+            handler.postDelayed(this, Random.Default.nextLong(100, 150))
         }
     }
 
