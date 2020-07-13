@@ -6,6 +6,8 @@
         <attr name="meter_handColor" format="color" />
         <attr name="meter_unitText" format="string" />
         <attr name="meter_unitTextSize" format="dimension" />
+        <attr name="meter_unitTextPadding" format="dimension" />
         <attr name="meter_valueTextSize" format="dimension" />
+        <attr name="meter_valueTextPadding" format="dimension" />
     </declare-styleable>
 </resources>

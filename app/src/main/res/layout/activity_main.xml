@@ -15,6 +15,9 @@
         app:meter_dialColor="@color/white"
         app:meter_handColor="@color/red"
         app:meter_unitText="km/h"
-        app:meter_unitTextSize="30sp" />
+        app:meter_unitTextPadding="60dp"
+        app:meter_unitTextSize="30sp"
+        app:meter_valueTextPadding="60dp"
+        app:meter_valueTextSize="20sp" />
 
 </FrameLayout>

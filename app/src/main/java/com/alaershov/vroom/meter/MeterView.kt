@@ -31,6 +31,9 @@ constructor(
     private var dialBackgroundColor: Int = Color.BLACK
     private var unitText: String = ""
     private var unitTextSize: Float = 0f
+    private var unitTextPadding: Float = 0f
+    private var valueTextSize: Float = 0f
+    private var valueTextPadding: Float = 0f
 
     private val center: PointF = PointF()
 
@@ -57,6 +60,9 @@ constructor(
                 dialBackgroundColor = getColor(R.styleable.MeterView_meter_dialBackgroundColor, dialBackgroundColor)
                 unitText = getString(R.styleable.MeterView_meter_unitText) ?: unitText
                 unitTextSize = getDimension(R.styleable.MeterView_meter_unitTextSize, unitTextSize)
+                unitTextPadding = getDimension(R.styleable.MeterView_meter_unitTextPadding, unitTextPadding)
+                valueTextSize = getDimension(R.styleable.MeterView_meter_valueTextSize, valueTextSize)
+                valueTextPadding = getDimension(R.styleable.MeterView_meter_valueTextPadding, valueTextPadding)
             } finally {
                 recycle()
             }
@@ -77,7 +83,10 @@ constructor(
             ),
             color = dialColor,
             backgroundColor = dialBackgroundColor,
-            unitTextSize = unitTextSize
+            unitTextSize = unitTextSize,
+            unitTextPadding = unitTextPadding,
+            valueTextSize = valueTextSize,
+            valueTextPadding = valueTextPadding
         )
 
         hand = Hand(
@@ -103,7 +112,11 @@ constructor(
         drawSpeedometer(canvas, center, size)
     }
 
-    private fun drawSpeedometer(canvas: Canvas, center: PointF, size: Int) {
+    private fun drawSpeedometer(
+        canvas: Canvas,
+        center: PointF,
+        size: Int
+    ) {
         drawDial(canvas, center, size)
         drawHand(canvas, center, size)
     }
@@ -116,11 +129,12 @@ constructor(
         dial.update(
             center = center,
             size = size.toFloat(),
-            minorTickAmount = (config.valueRange / config.minorTickValue).toInt(),
-            majorTickAmount = (config.valueRange / config.majorTickValue).toInt(),
+            minorTickAmount = config.minorTickAmount,
+            majorTickAmount = config.majorTickAmount,
             minAngle = minAngle,
             maxAngle = maxAngle,
-            unitText = unitText
+            unitText = unitText,
+            majorTickValueList = config.majorTickValueList
         )
         dial.draw(canvas)
     }
@@ -141,12 +155,26 @@ constructor(
 
     class Config(
         val valueMin: Double = 0.0,
-        val valueMax: Double = 0.0,
-        val minorTickValue: Double = 0.0,
-        val majorTickValue: Double = 0.0
+        val valueMax: Double = 1.0,
+        val minorTickValue: Double = 1.0,
+        val majorTickValue: Double = 1.0
     ) {
 
-        val valueRange: Double
-            get() = abs(valueMax - valueMin)
+        val valueRange: Double = abs(valueMax - valueMin)
+
+        val minorTickAmount: Int = (valueRange / minorTickValue).toInt()
+        val majorTickAmount: Int = (valueRange / majorTickValue).toInt()
+
+        val majorTickValueList: List<Double>
+
+        init {
+            val list = mutableListOf<Double>()
+
+            for (i in 0..majorTickAmount) {
+                list.add(valueMin + majorTickValue * i)
+            }
+
+            majorTickValueList = list.toList()
+        }
     }
 }
