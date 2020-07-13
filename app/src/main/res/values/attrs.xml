@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="MeterView">
         <attr name="meter_dialColor" format="color" />
+        <attr name="meter_dialBackgroundColor" format="color" />
         <attr name="meter_handColor" format="color" />
     </declare-styleable>
 </resources>

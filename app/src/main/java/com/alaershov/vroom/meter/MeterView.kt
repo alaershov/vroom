@@ -28,6 +28,7 @@ constructor(
 
     private var handColor: Int = Color.WHITE
     private var dialColor: Int = Color.WHITE
+    private var dialBackgroundColor: Int = Color.BLACK
 
     private val center: PointF = PointF()
 
@@ -51,6 +52,7 @@ constructor(
             try {
                 handColor = getColor(R.styleable.MeterView_meter_handColor, handColor)
                 dialColor = getColor(R.styleable.MeterView_meter_dialColor, dialColor)
+                dialBackgroundColor = getColor(R.styleable.MeterView_meter_dialBackgroundColor, dialBackgroundColor)
             } finally {
                 recycle()
             }
@@ -59,7 +61,6 @@ constructor(
         dial = Dial(
             circleStrokeWidth = dpToPxFloat(2),
             circlePadding = circlePadding,
-            color = dialColor,
             minorTickConfig = TickConfig(
                 length = dpToPxFloat(15),
                 strokeWidth = dpToPxFloat(3),
@@ -69,7 +70,9 @@ constructor(
                 length = dpToPxFloat(30),
                 strokeWidth = dpToPxFloat(6),
                 color = dialColor
-            )
+            ),
+            color = dialColor,
+            backgroundColor = dialBackgroundColor
         )
 
         hand = Hand(

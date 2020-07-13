@@ -7,7 +7,8 @@ class Dial(
     val circlePadding: Float,
     val minorTickConfig: TickConfig,
     val majorTickConfig: TickConfig,
-    val color: Int
+    val color: Int,
+    val backgroundColor: Int
 ) {
 
     private var minorTickAmount: Int = 0
@@ -26,6 +27,7 @@ class Dial(
     private val path: Path = Path()
     private val matrix: Matrix = Matrix()
     private val circlePaint: Paint = Paint()
+    private val backgroundPaint: Paint = Paint()
     private val minorTickPaint: Paint = Paint()
     private val majorTickPaint: Paint = Paint()
 
@@ -35,6 +37,10 @@ class Dial(
             strokeWidth = this@Dial.circleStrokeWidth
             isAntiAlias = true
             color = this@Dial.color
+        }
+        backgroundPaint.apply {
+            style = Paint.Style.FILL
+            color = backgroundColor
         }
 
         minorTickPaint.apply {
@@ -75,6 +81,7 @@ class Dial(
     }
 
     private fun drawCircle(canvas: Canvas) {
+        canvas.drawCircle(center.x, center.y, radius, backgroundPaint)
         canvas.drawCircle(center.x, center.y, radius, circlePaint)
     }
 

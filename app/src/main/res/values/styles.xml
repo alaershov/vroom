@@ -3,8 +3,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/red</item>
-        <item name="android:colorBackground">@color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">?colorPrimaryDark</item>
     </style>
 
 </resources>
