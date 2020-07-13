@@ -4,5 +4,8 @@
         <attr name="meter_dialColor" format="color" />
         <attr name="meter_dialBackgroundColor" format="color" />
         <attr name="meter_handColor" format="color" />
+        <attr name="meter_unitText" format="string" />
+        <attr name="meter_unitTextSize" format="dimension" />
+        <attr name="meter_valueTextSize" format="dimension" />
     </declare-styleable>
 </resources>

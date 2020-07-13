@@ -29,6 +29,8 @@ constructor(
     private var handColor: Int = Color.WHITE
     private var dialColor: Int = Color.WHITE
     private var dialBackgroundColor: Int = Color.BLACK
+    private var unitText: String = ""
+    private var unitTextSize: Float = 0f
 
     private val center: PointF = PointF()
 
@@ -53,6 +55,8 @@ constructor(
                 handColor = getColor(R.styleable.MeterView_meter_handColor, handColor)
                 dialColor = getColor(R.styleable.MeterView_meter_dialColor, dialColor)
                 dialBackgroundColor = getColor(R.styleable.MeterView_meter_dialBackgroundColor, dialBackgroundColor)
+                unitText = getString(R.styleable.MeterView_meter_unitText) ?: unitText
+                unitTextSize = getDimension(R.styleable.MeterView_meter_unitTextSize, unitTextSize)
             } finally {
                 recycle()
             }
@@ -72,7 +76,8 @@ constructor(
                 color = dialColor
             ),
             color = dialColor,
-            backgroundColor = dialBackgroundColor
+            backgroundColor = dialBackgroundColor,
+            unitTextSize = unitTextSize
         )
 
         hand = Hand(
@@ -114,7 +119,8 @@ constructor(
             minorTickAmount = (config.valueRange / config.minorTickValue).toInt(),
             majorTickAmount = (config.valueRange / config.majorTickValue).toInt(),
             minAngle = minAngle,
-            maxAngle = maxAngle
+            maxAngle = maxAngle,
+            unitText = unitText
         )
         dial.draw(canvas)
     }

@@ -1,6 +1,10 @@
 package com.alaershov.vroom.meter
 
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PointF
 
 class Dial(
     val circleStrokeWidth: Float,
@@ -8,7 +12,8 @@ class Dial(
     val minorTickConfig: TickConfig,
     val majorTickConfig: TickConfig,
     val color: Int,
-    val backgroundColor: Int
+    val backgroundColor: Int,
+    val unitTextSize: Float
 ) {
 
     private var minorTickAmount: Int = 0
@@ -18,6 +23,8 @@ class Dial(
     private var maxAngle: Float = 0f
     private val angleRange: Float
         get() = maxAngle - minAngle
+
+    private var unitText: String = ""
 
     private val center: PointF = PointF()
     private var size: Float = 0f
@@ -30,6 +37,7 @@ class Dial(
     private val backgroundPaint: Paint = Paint()
     private val minorTickPaint: Paint = Paint()
     private val majorTickPaint: Paint = Paint()
+    private val unitTextPaint: Paint = Paint()
 
     init {
         circlePaint.apply {
@@ -56,6 +64,13 @@ class Dial(
             isAntiAlias = true
             color = this@Dial.color
         }
+
+        unitTextPaint.apply {
+            style = Paint.Style.FILL
+            textAlign = Paint.Align.CENTER
+            textSize = unitTextSize
+            color = this@Dial.color
+        }
     }
 
     fun update(
@@ -64,7 +79,8 @@ class Dial(
         minorTickAmount: Int,
         majorTickAmount: Int,
         minAngle: Float,
-        maxAngle: Float
+        maxAngle: Float,
+        unitText: String
     ) {
         this.center.set(center)
         this.size = size
@@ -72,12 +88,14 @@ class Dial(
         this.majorTickAmount = majorTickAmount
         this.minAngle = minAngle
         this.maxAngle = maxAngle
+        this.unitText = unitText
     }
 
     fun draw(canvas: Canvas) {
         drawCircle(canvas)
         drawTicks(canvas)
         drawTickValues(canvas)
+        drawUnitText(canvas)
     }
 
     private fun drawCircle(canvas: Canvas) {
@@ -128,5 +146,9 @@ class Dial(
 
     private fun drawTickValues(canvas: Canvas) {
 
+    }
+
+    private fun drawUnitText(canvas: Canvas) {
+        canvas.drawText(unitText, center.x, center.y + size / 4, unitTextPaint)
     }
 }
