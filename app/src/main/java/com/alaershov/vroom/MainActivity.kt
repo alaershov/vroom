@@ -9,8 +9,11 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.RemoteException
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.alaershov.vroom.datasource.VehicleDataCallback
 import com.alaershov.vroom.datasource.VehicleDataSourceService
@@ -82,6 +85,11 @@ class MainActivity : AppCompatActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        initSpeedometer()
+        initScrollDetector()
+    }
+
+    private fun initSpeedometer() {
         speedometerView = findViewById(R.id.view_speedometer)
         speedometerView.configure(
             MeterView.Config(
@@ -92,6 +100,34 @@ class MainActivity : AppCompatActivity() {
             )
         )
         speedometerValueAnimator = MeterValueAnimator(speedometerView)
+    }
+
+    private fun initScrollDetector() {
+        val mainLayout = findViewById<FrameLayout>(R.id.layout_main)
+
+        val twoFingerScrollDetector = TwoFingerScrollDetector(object : TwoFingerScrollDetector.Listener {
+
+            override fun onScroll(
+                from: MotionEvent,
+                current: MotionEvent
+            ) {
+
+                Log.d(
+                    "onScroll",
+                    "from:${from.focalPoint} " +
+                            "current:${current.focalPoint} " +
+                            "total:${from.focalPoint.first - current.focalPoint.first}"
+                )
+            }
+        })
+
+        mainLayout.setOnTouchListener { _, event: MotionEvent ->
+            if (twoFingerScrollDetector.onTouchEvent(event)) {
+                true
+            } else {
+                super.onTouchEvent(event)
+            }
+        }
     }
 
     override fun onStart() {
