@@ -5,7 +5,8 @@ import kotlin.math.sin
 
 class SpeedDataSource(
     private val valueMin: Double,
-    private val valueMax: Double
+    private val valueMax: Double,
+    private val offset: Double = 0.0
 ) {
 
     fun getSpeed(time: Long): Double {
@@ -21,7 +22,7 @@ class SpeedDataSource(
 
     private fun speedPart(time: Long, period: Double): Double {
         val fullPeriod = Math.PI * 2
-        val partOfPeriod = time.rem(period) / period
+        val partOfPeriod = (time + offset).rem(period) / period
         return (sin(partOfPeriod * fullPeriod - Math.PI / 2) + 1) / 2
     }
 }

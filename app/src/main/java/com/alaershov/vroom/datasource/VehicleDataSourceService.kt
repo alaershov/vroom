@@ -61,7 +61,8 @@ class VehicleDataSourceService : Service() {
 
     private val rpmDataSource = SpeedDataSource(
         valueMin = 0.0,
-        valueMax = 8000.0
+        valueMax = 8000.0,
+        offset = 1000.0
     )
 
     override fun onCreate() {

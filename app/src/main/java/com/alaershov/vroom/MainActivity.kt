@@ -28,6 +28,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var speedometerView: MeterView
     private lateinit var speedometerValueAnimator: MeterValueAnimator
+    private var isSpeedometerViewActive: Boolean = false
+
+    private lateinit var tachometerView: MeterView
+    private lateinit var tachometerValueAnimator: MeterValueAnimator
+    private var isTachometerViewActive: Boolean = false
+
+    private lateinit var scrollCoordinator: ScrollCoordinator
 
     private var vehicleService: VehicleDataSourceServiceInterface? = null
 
@@ -86,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         initSpeedometer()
+        initTachometer()
         initScrollDetector()
     }
 
@@ -102,8 +110,35 @@ class MainActivity : AppCompatActivity() {
         speedometerValueAnimator = MeterValueAnimator(speedometerView)
     }
 
+    private fun initTachometer() {
+        tachometerView = findViewById(R.id.view_tachometer)
+        tachometerView.configure(
+            MeterView.Config(
+                valueMin = 0.0,
+                valueMax = 8.0,
+                minorTickValue = 0.5,
+                majorTickValue = 1.0
+            )
+        )
+        tachometerValueAnimator = MeterValueAnimator(tachometerView)
+    }
+
     private fun initScrollDetector() {
         val mainLayout = findViewById<FrameLayout>(R.id.layout_main)
+
+        scrollCoordinator = ScrollCoordinator(mainLayout, speedometerView, tachometerView, { id, isActive ->
+            Log.d("viewactive", "$id $isActive")
+            when (id) {
+                R.id.view_speedometer -> {
+                    Log.d("viewactive", "speed $isActive")
+                    isSpeedometerViewActive = isActive
+                }
+                R.id.view_tachometer -> {
+                    Log.d("viewactive", "rpm $isActive")
+                    isTachometerViewActive = isActive
+                }
+            }
+        })
 
         val twoFingerScrollDetector = TwoFingerScrollDetector(object : TwoFingerScrollDetector.Listener {
 
@@ -111,13 +146,15 @@ class MainActivity : AppCompatActivity() {
                 from: MotionEvent,
                 current: MotionEvent
             ) {
+                val scrollX = current.focalPoint.first - from.focalPoint.first
+                Log.d("onScroll", "total:$scrollX")
+                scrollCoordinator.onScroll(scrollX)
+            }
 
-                Log.d(
-                    "onScroll",
-                    "from:${from.focalPoint} " +
-                            "current:${current.focalPoint} " +
-                            "total:${from.focalPoint.first - current.focalPoint.first}"
-                )
+            override fun onScrollFinished(from: MotionEvent, current: MotionEvent) {
+                val scrollX = current.focalPoint.first - from.focalPoint.first
+                Log.d("onScrollFinished", "total:$scrollX")
+                scrollCoordinator.onScrollFinished()
             }
         })
 
@@ -149,6 +186,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showVehicleData(speed: Float, rpm: Float) {
-        speedometerValueAnimator.animateValue(speed.toDouble())
+        if (isSpeedometerViewActive) {
+            speedometerValueAnimator.animateValue(speed.toDouble())
+        }
+        if (isTachometerViewActive) {
+            tachometerValueAnimator.animateValue(rpm.toDouble() / 1000)
+        }
     }
 }

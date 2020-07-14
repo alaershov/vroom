@@ -22,6 +22,7 @@ class TwoFingerScrollDetector(
                         is State.Scroll -> {
                             if (event.pointerCount != POINTER_COUNT) {
                                 state = State.None
+                                listener.onScrollFinished(it.from, it.current)
                             } else {
                                 listener.onScroll(it.from, it.current)
                                 it.current = event
@@ -31,6 +32,11 @@ class TwoFingerScrollDetector(
                 }
             }
             MotionEvent.ACTION_POINTER_UP -> {
+                state.also {
+                    when (it) {
+                        is State.Scroll -> listener.onScrollFinished(it.from, it.current)
+                    }
+                }
                 state = State.None
             }
         }
@@ -48,6 +54,11 @@ class TwoFingerScrollDetector(
     interface Listener {
 
         fun onScroll(
+            from: MotionEvent,
+            current: MotionEvent
+        )
+
+        fun onScrollFinished(
             from: MotionEvent,
             current: MotionEvent
         )
