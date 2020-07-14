@@ -1,4 +1,4 @@
-package com.alaershov.vroom
+package com.alaershov.vroom.scroll
 
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
@@ -47,7 +47,8 @@ class ScrollCoordinator(
     private val currentScrollPercent: Float
         get() = currentScrollValue / container.width
 
-    private var state: State = State.NONE
+    private var state: State =
+        State.NONE
 
     init {
         currentView.z = 0f

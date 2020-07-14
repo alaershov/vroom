@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.RemoteException
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -20,6 +19,9 @@ import com.alaershov.vroom.datasource.VehicleDataSourceService
 import com.alaershov.vroom.datasource.VehicleDataSourceServiceInterface
 import com.alaershov.vroom.meter.MeterValueAnimator
 import com.alaershov.vroom.meter.MeterView
+import com.alaershov.vroom.scroll.ScrollCoordinator
+import com.alaershov.vroom.scroll.TwoFingerScrollDetector
+import com.alaershov.vroom.scroll.focalPoint
 
 
 class MainActivity : AppCompatActivity() {
@@ -126,40 +128,32 @@ class MainActivity : AppCompatActivity() {
     private fun initScrollDetector() {
         val mainLayout = findViewById<FrameLayout>(R.id.layout_main)
 
-        scrollCoordinator = ScrollCoordinator(mainLayout, speedometerView, tachometerView, { id, isActive ->
-            Log.d("viewactive", "$id $isActive")
-            when (id) {
-                R.id.view_speedometer -> {
-                    Log.d("viewactive", "speed $isActive")
-                    isSpeedometerViewActive = isActive
-                }
-                R.id.view_tachometer -> {
-                    Log.d("viewactive", "rpm $isActive")
-                    isTachometerViewActive = isActive
+        scrollCoordinator = ScrollCoordinator(
+            container = mainLayout,
+            firstView = speedometerView,
+            secondView = tachometerView,
+            onViewActive = { id, isActive ->
+                when (id) {
+                    R.id.view_speedometer -> isSpeedometerViewActive = isActive
+                    R.id.view_tachometer -> isTachometerViewActive = isActive
                 }
             }
-        })
+        )
 
-        val twoFingerScrollDetector = TwoFingerScrollDetector(object : TwoFingerScrollDetector.Listener {
+        val scrollDetector = TwoFingerScrollDetector(object : TwoFingerScrollDetector.Listener {
 
-            override fun onScroll(
-                from: MotionEvent,
-                current: MotionEvent
-            ) {
+            override fun onScroll(from: MotionEvent, current: MotionEvent) {
                 val scrollX = current.focalPoint.first - from.focalPoint.first
-                Log.d("onScroll", "total:$scrollX")
                 scrollCoordinator.onScroll(scrollX)
             }
 
             override fun onScrollFinished(from: MotionEvent, current: MotionEvent) {
-                val scrollX = current.focalPoint.first - from.focalPoint.first
-                Log.d("onScrollFinished", "total:$scrollX")
                 scrollCoordinator.onScrollFinished()
             }
         })
 
         mainLayout.setOnTouchListener { _, event: MotionEvent ->
-            if (twoFingerScrollDetector.onTouchEvent(event)) {
+            if (scrollDetector.onTouchEvent(event)) {
                 true
             } else {
                 super.onTouchEvent(event)

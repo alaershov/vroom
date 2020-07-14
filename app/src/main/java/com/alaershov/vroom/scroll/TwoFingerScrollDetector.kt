@@ -1,4 +1,4 @@
-package com.alaershov.vroom
+package com.alaershov.vroom.scroll
 
 import android.view.MotionEvent
 import androidx.core.view.MotionEventCompat
@@ -7,13 +7,16 @@ class TwoFingerScrollDetector(
     private val listener: Listener
 ) {
 
-    private var state: State = State.None
+    private var state: State =
+        State.None
 
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (MotionEventCompat.getActionMasked(event)) {
             MotionEvent.ACTION_POINTER_DOWN -> {
                 if (event.pointerCount == POINTER_COUNT) {
-                    state = State.Scroll(MotionEvent.obtain(event), event)
+                    state = State.Scroll(
+                        MotionEvent.obtain(event), event
+                    )
                 }
             }
             MotionEvent.ACTION_MOVE -> {

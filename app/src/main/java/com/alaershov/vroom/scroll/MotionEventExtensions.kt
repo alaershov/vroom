@@ -1,4 +1,4 @@
-package com.alaershov.vroom
+package com.alaershov.vroom.scroll
 
 import android.view.MotionEvent
 
