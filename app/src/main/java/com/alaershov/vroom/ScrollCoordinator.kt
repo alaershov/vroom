@@ -9,13 +9,17 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import kotlin.math.abs
 
+/**
+ * Listens for scroll events and animates views to
+ * show the current scroll state.
+ */
 class ScrollCoordinator(
     private val container: ViewGroup,
     firstView: View,
     secondView: View,
     private val onViewActive: (id: Int, isActive: Boolean) -> Unit,
-    private val nextPageThreshold: Float = 0.3f,
-    private val snapDuration: Long = 300,
+    private val nextPageThreshold: Float = 0.2f,
+    private val snapDuration: Long = 250,
     private val snapInterpolator: TimeInterpolator = DecelerateInterpolator()
 ) {
     private var currentView: View = firstView
@@ -36,12 +40,14 @@ class ScrollCoordinator(
             field = value
         }
 
-    private var valueAnimator: ValueAnimator? = null
+    private var snapAnimator: ValueAnimator? = null
 
     private var currentScrollValue: Float = 0f
 
     private val currentScrollPercent: Float
         get() = currentScrollValue / container.width
+
+    private var state: State = State.NONE
 
     init {
         currentView.z = 0f
@@ -58,7 +64,11 @@ class ScrollCoordinator(
 
 
     fun onScroll(scrollValue: Float) {
-        valueAnimator?.cancel()
+        if (scrollValue > 0) {
+            return
+        }
+        state = State.SCROLLING
+        snapAnimator?.cancel()
         currentScrollValue = scrollValue
         applyScrollState(currentScrollPercent)
         isCurrentViewActive = true
@@ -66,6 +76,9 @@ class ScrollCoordinator(
     }
 
     fun onScrollFinished() {
+        if (state != State.SCROLLING) {
+            return
+        }
         val scrollPercent = abs(currentScrollPercent)
         if (scrollPercent > nextPageThreshold) {
             animateTransitionForward()
@@ -75,8 +88,8 @@ class ScrollCoordinator(
     }
 
     private fun animateTransitionForward() {
-        valueAnimator?.cancel()
-        valueAnimator = ValueAnimator.ofFloat(currentScrollPercent, -1f).also {
+        snapAnimator?.cancel()
+        snapAnimator = ValueAnimator.ofFloat(currentScrollPercent, -1f).also {
             it.duration = snapDuration
             it.interpolator = snapInterpolator
             it.addUpdateListener { animator ->
@@ -86,7 +99,9 @@ class ScrollCoordinator(
             it.doOnEnd {
                 swapViews()
                 applyScrollState(0f)
+                state = State.NONE
             }
+            state = State.SNAPPING
             it.start()
         }
     }
@@ -104,8 +119,8 @@ class ScrollCoordinator(
     }
 
     private fun animateTransitionBack() {
-        valueAnimator?.cancel()
-        valueAnimator = ValueAnimator.ofFloat(currentScrollPercent, 0f).also {
+        snapAnimator?.cancel()
+        snapAnimator = ValueAnimator.ofFloat(currentScrollPercent, 0f).also {
             it.duration = snapDuration
             it.interpolator = snapInterpolator
             it.addUpdateListener { animator ->
@@ -115,7 +130,9 @@ class ScrollCoordinator(
             it.doOnEnd {
                 isCurrentViewActive = true
                 isNextViewActive = false
+                state = State.NONE
             }
+            state = State.SNAPPING
             it.start()
         }
     }
@@ -124,5 +141,11 @@ class ScrollCoordinator(
         currentView.alpha = 1 - abs(percent)
         currentView.x = 0 + (container.width * percent) / 2
         nextView.x = container.width + (container.width * percent)
+    }
+
+    private enum class State {
+        NONE,
+        SCROLLING,
+        SNAPPING
     }
 }
